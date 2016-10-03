@@ -109,8 +109,6 @@
 		1A8B51971D74B9BB00AE7923 /* sync_metadata.hpp in Headers */ = {isa = PBXBuildFile; fileRef = 1A8B51951D74B9BB00AE7923 /* sync_metadata.hpp */; };
 		1A90FCBB1D3D37F50086A57F /* RLMSyncManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1AF7EA951D340AF70001A9B5 /* RLMSyncManager.mm */; };
 		1A90FCBC1D3D37F70086A57F /* RLMNetworkClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF7EA9A1D340E700001A9B5 /* RLMNetworkClient.m */; };
-		1A9428DC1D9C8BE900A74ED2 /* RLMSyncManager+ObjectServerTests.h in Headers */ = {isa = PBXBuildFile; fileRef = 1A9428DA1D9C8BE900A74ED2 /* RLMSyncManager+ObjectServerTests.h */; };
-		1A9428DE1D9C8BF800A74ED2 /* RLMSyncManager+ObjectServerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1A9428DB1D9C8BE900A74ED2 /* RLMSyncManager+ObjectServerTests.m */; };
 		1AA5AE981D989BE400ED8C27 /* SwiftSyncTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA5AE961D989BE000ED8C27 /* SwiftSyncTestCase.swift */; };
 		1AA5AE9C1D98A68E00ED8C27 /* RLMSyncTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AA5AE9B1D98A68E00ED8C27 /* RLMSyncTestCase.m */; };
 		1AA5AEA11D98C99800ED8C27 /* SwiftObjectServerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1AA5AE9F1D98C99500ED8C27 /* SwiftObjectServerTests.swift */; };
@@ -132,7 +130,8 @@
 		1AD3870C1D4A7FBB00479110 /* RLMSyncSession.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AD3870A1D4A7FBB00479110 /* RLMSyncSession.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1AD3870D1D4A7FBB00479110 /* RLMSyncSession.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1AD3870B1D4A7FBB00479110 /* RLMSyncSession.mm */; };
 		1AF2F7A31D95DBC70063A138 /* RLMMultiProcessTestCase.m in Sources */ = {isa = PBXBuildFile; fileRef = 027A4D2B1AB1012500AA46F9 /* RLMMultiProcessTestCase.m */; };
-		1AF2F7A81D95E47B0063A138 /* RLMSyncUser+ObjectServerTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1AF2F7A51D95E44F0063A138 /* RLMSyncUser+ObjectServerTests.mm */; };
+		1AF64DCF1DA3042B0081EB15 /* RLMSyncManager+ObjectServerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF64DCC1DA304210081EB15 /* RLMSyncManager+ObjectServerTests.m */; };
+		1AF64DD41DA304B10081EB15 /* RLMSyncUser+ObjectServerTests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1AF64DD11DA304A90081EB15 /* RLMSyncUser+ObjectServerTests.mm */; };
 		1AF6EA471D36B1850014EB85 /* RLMAuthResponseModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AF6EA451D36B1850014EB85 /* RLMAuthResponseModel.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		1AF6EA481D36B1850014EB85 /* RLMAuthResponseModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AF6EA461D36B1850014EB85 /* RLMAuthResponseModel.m */; };
 		1AF7EA961D340AF70001A9B5 /* RLMSyncManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AF7EA941D340AF70001A9B5 /* RLMSyncManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -656,8 +655,6 @@
 		1A8413351D4C0B5B00C5326F /* RLMSyncUser_Private.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = RLMSyncUser_Private.hpp; sourceTree = "<group>"; };
 		1A8B51941D74B9BB00AE7923 /* sync_metadata.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sync_metadata.cpp; sourceTree = "<group>"; };
 		1A8B51951D74B9BB00AE7923 /* sync_metadata.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = sync_metadata.hpp; sourceTree = "<group>"; };
-		1A9428DA1D9C8BE900A74ED2 /* RLMSyncManager+ObjectServerTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RLMSyncManager+ObjectServerTests.h"; sourceTree = "<group>"; };
-		1A9428DB1D9C8BE900A74ED2 /* RLMSyncManager+ObjectServerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "RLMSyncManager+ObjectServerTests.m"; sourceTree = "<group>"; };
 		1AA5AE961D989BE000ED8C27 /* SwiftSyncTestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = SwiftSyncTestCase.swift; path = Realm/ObjectServerTests/SwiftSyncTestCase.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		1AA5AE9A1D98A1B000ED8C27 /* Object-Server-Tests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "Object-Server-Tests-Bridging-Header.h"; path = "Realm/ObjectServerTests/Object-Server-Tests-Bridging-Header.h"; sourceTree = "<group>"; };
 		1AA5AE9B1D98A68E00ED8C27 /* RLMSyncTestCase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RLMSyncTestCase.m; path = Realm/ObjectServerTests/RLMSyncTestCase.m; sourceTree = "<group>"; };
@@ -675,8 +672,10 @@
 		1ABF256E1D52AB6200BAC441 /* RLMRealmConfiguration+Sync.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "RLMRealmConfiguration+Sync.mm"; sourceTree = "<group>"; };
 		1AD3870A1D4A7FBB00479110 /* RLMSyncSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RLMSyncSession.h; sourceTree = "<group>"; };
 		1AD3870B1D4A7FBB00479110 /* RLMSyncSession.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RLMSyncSession.mm; sourceTree = "<group>"; };
-		1AF2F7A41D95E44F0063A138 /* RLMSyncUser+ObjectServerTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "RLMSyncUser+ObjectServerTests.h"; path = "Realm/ObjectServerTests/RLMSyncUser+ObjectServerTests.h"; sourceTree = "<group>"; };
-		1AF2F7A51D95E44F0063A138 /* RLMSyncUser+ObjectServerTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = "RLMSyncUser+ObjectServerTests.mm"; path = "Realm/ObjectServerTests/RLMSyncUser+ObjectServerTests.mm"; sourceTree = "<group>"; };
+		1AF64DCB1DA304210081EB15 /* RLMSyncManager+ObjectServerTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "RLMSyncManager+ObjectServerTests.h"; path = "Realm/ObjectServerTests/RLMSyncManager+ObjectServerTests.h"; sourceTree = "<group>"; };
+		1AF64DCC1DA304210081EB15 /* RLMSyncManager+ObjectServerTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "RLMSyncManager+ObjectServerTests.m"; path = "Realm/ObjectServerTests/RLMSyncManager+ObjectServerTests.m"; sourceTree = "<group>"; };
+		1AF64DD01DA304A90081EB15 /* RLMSyncUser+ObjectServerTests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "RLMSyncUser+ObjectServerTests.h"; path = "Realm/ObjectServerTests/RLMSyncUser+ObjectServerTests.h"; sourceTree = "<group>"; };
+		1AF64DD11DA304A90081EB15 /* RLMSyncUser+ObjectServerTests.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = "RLMSyncUser+ObjectServerTests.mm"; path = "Realm/ObjectServerTests/RLMSyncUser+ObjectServerTests.mm"; sourceTree = "<group>"; };
 		1AF6EA451D36B1850014EB85 /* RLMAuthResponseModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RLMAuthResponseModel.h; sourceTree = "<group>"; };
 		1AF6EA461D36B1850014EB85 /* RLMAuthResponseModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RLMAuthResponseModel.m; sourceTree = "<group>"; };
 		1AF7EA941D340AF70001A9B5 /* RLMSyncManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RLMSyncManager.h; sourceTree = "<group>"; };
@@ -1010,10 +1009,10 @@
 			isa = PBXGroup;
 			children = (
 				1AA5AE9A1D98A1B000ED8C27 /* Object-Server-Tests-Bridging-Header.h */,
-				1AF2F7A41D95E44F0063A138 /* RLMSyncUser+ObjectServerTests.h */,
-				1AF2F7A51D95E44F0063A138 /* RLMSyncUser+ObjectServerTests.mm */,
-				1A9428DA1D9C8BE900A74ED2 /* RLMSyncManager+ObjectServerTests.h */,
-				1A9428DB1D9C8BE900A74ED2 /* RLMSyncManager+ObjectServerTests.m */,
+				1AF64DCB1DA304210081EB15 /* RLMSyncManager+ObjectServerTests.h */,
+				1AF64DCC1DA304210081EB15 /* RLMSyncManager+ObjectServerTests.m */,
+				1AF64DD01DA304A90081EB15 /* RLMSyncUser+ObjectServerTests.h */,
+				1AF64DD11DA304A90081EB15 /* RLMSyncUser+ObjectServerTests.mm */,
 			);
 			name = Utility;
 			sourceTree = "<group>";
@@ -1504,7 +1503,6 @@
 				3F9863BD1D36876B00641C98 /* RLMClassInfo.hpp in Headers */,
 				5D659EAB1BE04556006515A0 /* RLMCollection.h in Headers */,
 				3FBEF67A1C63D66100F6935B /* RLMCollection_Private.hpp in Headers */,
-				1A9428DC1D9C8BE900A74ED2 /* RLMSyncManager+ObjectServerTests.h in Headers */,
 				5D659EAC1BE04556006515A0 /* RLMConstants.h in Headers */,
 				5D659EAE1BE04556006515A0 /* RLMListBase.h in Headers */,
 				1AF6EA471D36B1850014EB85 /* RLMAuthResponseModel.h in Headers */,
@@ -2332,11 +2330,11 @@
 			files = (
 				E8267FF11D90B8E700E001C7 /* RLMObjectServerTests.m in Sources */,
 				1AA5AEA11D98C99800ED8C27 /* SwiftObjectServerTests.swift in Sources */,
-				1AF2F7A81D95E47B0063A138 /* RLMSyncUser+ObjectServerTests.mm in Sources */,
 				1AA5AE981D989BE400ED8C27 /* SwiftSyncTestCase.swift in Sources */,
-				1A9428DE1D9C8BF800A74ED2 /* RLMSyncManager+ObjectServerTests.m in Sources */,
 				1AF2F7A31D95DBC70063A138 /* RLMMultiProcessTestCase.m in Sources */,
 				E86E61241D91E4E200DC2419 /* RLMTestCase.m in Sources */,
+				1AF64DCF1DA3042B0081EB15 /* RLMSyncManager+ObjectServerTests.m in Sources */,
+				1AF64DD41DA304B10081EB15 /* RLMSyncUser+ObjectServerTests.mm in Sources */,
 				1AA5AE9C1D98A68E00ED8C27 /* RLMSyncTestCase.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

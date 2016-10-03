@@ -125,11 +125,9 @@ static NSURL *makeRealmURL(const char *function, NSString *identifier) {
                                               server:[RLMObjectServerTests authServerURL]];
     RLMRealm *r = [self openRealmForURL:url user:user];
     if (self.isParent) {
-        WAIT_FOR_DOWNLOAD(user, url);
         CHECK_COUNT(0, SyncObject, r);
         RLMRunChildAndWait();
-        WAIT_FOR_DOWNLOAD(user, url);
-        CHECK_COUNT(3, SyncObject, r);
+        [self waitForDownloadsForUser:user realms:@[r] realmURLs:@[url] expectedCounts:@[@3]];
     } else {
         // Add objects.
         [self addSyncObjectsToRealm:r descriptions:@[@"child-1", @"child-2", @"child-3"]];
@@ -145,7 +143,6 @@ static NSURL *makeRealmURL(const char *function, NSString *identifier) {
                                               server:[RLMObjectServerTests authServerURL]];
     RLMRealm *r = [self openRealmForURL:url user:user];
     if (self.isParent) {
-        WAIT_FOR_DOWNLOAD(user, url);
         // Add objects.
         [self addSyncObjectsToRealm:r descriptions:@[@"parent-1", @"parent-2", @"parent-3"]];
         WAIT_FOR_UPLOAD(user, url);
@@ -174,9 +171,9 @@ static NSURL *makeRealmURL(const char *function, NSString *identifier) {
     RLMSyncUser *user = [self logInUserForCredential:[RLMObjectServerTests basicCredential:self.isParent]
                                               server:[RLMObjectServerTests authServerURL]];
     // Open three Realms.
-    __unused RLMRealm *realmA = [self openRealmForURL:urlA user:user];
-    __unused RLMRealm *realmB = [self openRealmForURL:urlB user:user];
-    __unused RLMRealm *realmC = [self openRealmForURL:urlC user:user];
+    __attribute__((objc_precise_lifetime)) RLMRealm *realmA = [self openRealmForURL:urlA user:user];
+    __attribute__((objc_precise_lifetime)) RLMRealm *realmB = [self openRealmForURL:urlB user:user];
+    __attribute__((objc_precise_lifetime)) RLMRealm *realmC = [self openRealmForURL:urlC user:user];
     // Make sure there are three active sessions for the user.
     XCTAssert(user.allSessions.count == 3, @"Expected 3 sessions, but didn't get 3 sessions");
     XCTAssertNotNil([user sessionForURL:urlA], @"Expected to get a session for URL A");
@@ -306,7 +303,6 @@ static NSURL *makeRealmURL(const char *function, NSString *identifier) {
             CHECK_COUNT(OBJECT_COUNT, SyncObject, r);
         }
         // Run the sub-test. (Give the upload a bit of time to start.)
-        usleep(50000);
         RLMRunChildAndWait();
     } else {
         RLMRealm *r = [self openRealmForURL:url user:user];
@@ -333,7 +329,6 @@ static NSURL *makeRealmURL(const char *function, NSString *identifier) {
         [r commitWriteTransaction];
         [user logOut];
         CHECK_COUNT(OBJECT_COUNT, SyncObject, r);
-        usleep(50000);
         RLMRunChildAndWait();
     } else {
         WAIT_FOR_DOWNLOAD(user, url);
@@ -360,9 +355,6 @@ static NSURL *makeRealmURL(const char *function, NSString *identifier) {
         // Log the user back in.
         user = [self logInUserForCredential:[RLMObjectServerTests basicCredential:NO]
                                      server:[RLMObjectServerTests authServerURL]];
-        // Wait for the sessions to asynchronously rebind
-        // FIXME: once new token system is in this will be unnecessary
-        usleep(200000);
         [self addSyncObjectsToRealm:r descriptions:@[@"parent-2", @"parent-3"]];
         WAIT_FOR_UPLOAD(user, url);
         CHECK_COUNT(3, SyncObject, r);
@@ -390,9 +382,6 @@ static NSURL *makeRealmURL(const char *function, NSString *identifier) {
         // Log the user back in.
         user = [self logInUserForCredential:[RLMObjectServerTests basicCredential:NO]
                                      server:[RLMObjectServerTests authServerURL]];
-        // Wait for the sessions to asynchronously rebind
-        // FIXME: once new token system is in this will be unnecessary
-        usleep(200000);
         RLMRunChildAndWait();
         WAIT_FOR_DOWNLOAD(user, url);
         CHECK_COUNT(3, SyncObject, r);
@@ -412,19 +401,21 @@ static NSURL *makeRealmURL(const char *function, NSString *identifier) {
                                               server:[RLMObjectServerTests authServerURL]];
     NSError *error = nil;
     if (self.isParent) {
+        // Semaphore for knowing when the Realm is successfully opened for sync.
+        dispatch_semaphore_t sema = dispatch_semaphore_create(0);
         RLMRealmConfiguration *config = [RLMRealmConfiguration defaultConfiguration];
         config.syncConfiguration = [[RLMSyncConfiguration alloc] initWithUser:user realmURL:url];
         [user logOut];
         // Open a Realm after the user's been logged out.
+        [self primeSyncManagerWithSemaphore:sema];
         RLMRealm *r = [RLMRealm realmWithConfiguration:config error:&error];
         XCTAssertNil(error, @"Error when opening Realm: %@", error);
         [self addSyncObjectsToRealm:r descriptions:@[@"parent-1"]];
         CHECK_COUNT(1, SyncObject, r);
         user = [self logInUserForCredential:[RLMObjectServerTests basicCredential:NO]
                                      server:[RLMObjectServerTests authServerURL]];
-        // Wait for the sessions to asynchronously rebind
-        // FIXME: once new token system is in this will be unnecessary
-        usleep(200000);
+        // Wait for the Realm's session to be bound.
+        WAIT_FOR_SEMAPHORE(sema, 30);
         [self addSyncObjectsToRealm:r descriptions:@[@"parent-2", @"parent-3"]];
         WAIT_FOR_UPLOAD(user, url);
         CHECK_COUNT(3, SyncObject, r);
@@ -445,20 +436,21 @@ static NSURL *makeRealmURL(const char *function, NSString *identifier) {
                                               server:[RLMObjectServerTests authServerURL]];
     NSError *error = nil;
     if (self.isParent) {
+        dispatch_semaphore_t sema = dispatch_semaphore_create(0);
         RLMRunChildAndWait();
         RLMRealmConfiguration *config = [RLMRealmConfiguration defaultConfiguration];
         config.syncConfiguration = [[RLMSyncConfiguration alloc] initWithUser:user realmURL:url];
         [user logOut];
         // Open a Realm after the user's been logged out.
+        [self primeSyncManagerWithSemaphore:sema];
         RLMRealm *r = [RLMRealm realmWithConfiguration:config error:&error];
         XCTAssertNil(error, @"Error when opening Realm: %@", error);
         [self addSyncObjectsToRealm:r descriptions:@[@"parent-1"]];
         CHECK_COUNT(1, SyncObject, r);
         user = [self logInUserForCredential:[RLMObjectServerTests basicCredential:NO]
                                      server:[RLMObjectServerTests authServerURL]];
-        // Wait for the sessions to asynchronously rebind
-        // FIXME: once new token system is in this will be unnecessary
-        usleep(200000);
+        // Wait for the Realm's session to be bound.
+        WAIT_FOR_SEMAPHORE(sema, 30);
         [self waitForDownloadsForUser:user realms:@[r] realmURLs:@[url] expectedCounts:@[@4]];
     } else {
         RLMRealm *r = [self openRealmForURL:url user:user];
@@ -511,9 +503,6 @@ static NSURL *makeRealmURL(const char *function, NSString *identifier) {
         // Log the user back in.
         user = [self logInUserForCredential:[RLMObjectServerTests basicCredential:NO]
                                      server:[RLMObjectServerTests authServerURL]];
-        // Allow for asynchronous binding work.
-        // FIXME: remove this once we get the new token system
-        usleep(200000);
         // Open the Realm (for the first time).
         RLMRealm *r = [self openRealmForURL:url user:user];
         // Run the sub-test.
@@ -548,8 +537,6 @@ static NSURL *makeRealmURL(const char *function, NSString *identifier) {
         // Log the user back in.
         user = [self logInUserForCredential:[RLMObjectServerTests basicCredential:NO]
                                      server:[RLMObjectServerTests authServerURL]];
-        // Give the sessions time to asynchronously re-bind.
-        usleep(200000);
         // Open the Realm again.
         r = [self immediatelyOpenRealmForURL:url user:user];
         [self addSyncObjectsToRealm:r descriptions:@[@"child-1", @"child-2", @"child-3", @"child-4"]];

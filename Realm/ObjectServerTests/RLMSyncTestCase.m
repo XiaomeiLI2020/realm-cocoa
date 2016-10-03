@@ -158,6 +158,18 @@ static NSURL *syncDirectoryForChildProcess() {
     return theUser;
 }
 
+// FIXME: remove this API once the new token system is implemented.
+- (void)primeSyncManagerWithSemaphore:(dispatch_semaphore_t)semaphore {
+    if (semaphore == nil) {
+        [[RLMSyncManager sharedManager] setSessionCompletionNotifier:^(__unused NSError *error){ }];
+        return;
+    }
+    [[RLMSyncManager sharedManager] setSessionCompletionNotifier:^(NSError *error) {
+        XCTAssertNil(error, @"Session completion block returned with an error: %@", error);
+        dispatch_semaphore_signal(semaphore);
+    }];
+}
+
 #pragma mark - XCUnitTest Lifecycle
 
 + (void)setUp {
@@ -170,6 +182,17 @@ static NSURL *syncDirectoryForChildProcess() {
     }
 }
 
+- (void)runResetObjectServer {
+    [self.task terminate];
+    self.task = [[NSTask alloc] init];
+    self.task.currentDirectoryPath = [[RLMSyncTestCase rootRealmCocoaURL] path];
+    self.task.launchPath = @"/bin/sh";
+    self.task.arguments = @[@"build.sh", @"reset-object-server"];
+    self.task.standardOutput = [NSPipe pipe];
+    [self.task launch];
+    [self.task waitUntilExit];
+}
+
 - (void)setUp {
     [super setUp];
     self.continueAfterFailure = NO;
@@ -180,12 +203,12 @@ static NSURL *syncDirectoryForChildProcess() {
         s_managerForTest = [[RLMSyncManager alloc] initWithCustomRootDirectory:syncDirectoryForChildProcess()];
         return;
     } else {
+        // FIXME: we need a more robust way of waiting till a test's server process has completed cleaning
+        // up before starting another test.
+        sleep(1);
+        [self runResetObjectServer];
         s_managerForTest = [[RLMSyncManager alloc] initWithCustomRootDirectory:nil];
     }
-
-    // FIXME: we need a more robust way of waiting till a test's server process has completed cleaning
-    // up before starting another test.
-    sleep(1);
     [RLMSyncManager sharedManager].logLevel = RLMSyncLogLevelOff;
     self.task = [[NSTask alloc] init];
     self.task.currentDirectoryPath = [[RLMSyncTestCase rootRealmCocoaURL] path];
@@ -208,27 +231,11 @@ static NSURL *syncDirectoryForChildProcess() {
 
 - (void)tearDown {
     [s_managerForTest prepareForDestruction];
-    usleep(500000);
     if (self.isParent) {
-        [self.task terminate];
-        self.task = [[NSTask alloc] init];
-        self.task.currentDirectoryPath = [[RLMSyncTestCase rootRealmCocoaURL] path];
-        self.task.launchPath = @"/bin/sh";
-        self.task.arguments = @[@"build.sh", @"reset-object-server"];
-        self.task.standardOutput = [NSPipe pipe];
-        [self.task launch];
-        [self.task waitUntilExit];
-        usleep(500000);
+        [self runResetObjectServer];
     }
     s_managerForTest = nil;
     [super tearDown];
-}
-
-- (int)runChildAndWait {
-    int value = [super runChildAndWait];
-    // Give client some time to stop asynchronous work before killing server.
-    usleep(20000);
-    return value;
 }
 
 @end

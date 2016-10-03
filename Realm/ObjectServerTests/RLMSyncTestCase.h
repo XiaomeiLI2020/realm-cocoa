@@ -61,19 +61,30 @@ NS_ASSUME_NONNULL_BEGIN
                       realmURLs:(NSArray<NSURL *> *)realmURLs
                  expectedCounts:(NSArray<NSNumber *> *)counts;
 
+/// "Prime" the sync manager to signal the given semaphore the next time a session is bound. This method should be
+/// called right before a Realm is opened if that Realm's session is the one to be monitored.
+- (void)primeSyncManagerWithSemaphore:(nullable dispatch_semaphore_t)semaphore;
+
 @end
 
 NS_ASSUME_NONNULL_END
 
+#define WAIT_FOR_SEMAPHORE(macro_semaphore, macro_timeout) \
+{                                                                                                                      \
+    int64_t delay_in_ns = (int64_t)(macro_timeout * NSEC_PER_SEC);                                                     \
+    BOOL sema_success = dispatch_semaphore_wait(macro_semaphore, dispatch_time(DISPATCH_TIME_NOW, delay_in_ns)) == 0;  \
+    XCTAssertTrue(sema_success, @"Semaphore timed out.");                                                              \
+}
+
 #define WAIT_FOR_UPLOAD(macro_user, macro_url) \
-XCTAssertTrue([macro_user waitForUploadToFinish:macro_url], @"Upload timed out for URL: %@", macro_url);
+    XCTAssertTrue([macro_user waitForUploadToFinish:macro_url], @"Upload timed out for URL: %@", macro_url);
 
 #define WAIT_FOR_DOWNLOAD(macro_user, macro_url) \
-XCTAssertTrue([macro_user waitForDownloadToFinish:macro_url], @"Download timed out for URL: %@", macro_url);
+    XCTAssertTrue([macro_user waitForDownloadToFinish:macro_url], @"Download timed out for URL: %@", macro_url);
 
 #define CHECK_COUNT(d_count, macro_object_type, macro_realm) \
-{ \
-NSInteger c = [macro_object_type allObjectsInRealm:macro_realm].count; \
-NSString *w = self.isParent ? @"parent" : @"child"; \
-XCTAssert(d_count == c, @"Expected %@ items, but actually got %@ (%@)", @(d_count), @(c), w); \
+{                                                                                                       \
+    NSInteger c = [macro_object_type allObjectsInRealm:macro_realm].count;                              \
+    NSString *w = self.isParent ? @"parent" : @"child";                                                 \
+    XCTAssert(d_count == c, @"Expected %@ items, but actually got %@ (%@)", @(d_count), @(c), w);       \
 }
