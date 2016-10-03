@@ -303,6 +303,10 @@ static NSURL *makeRealmURL(const char *function, NSString *identifier) {
             CHECK_COUNT(OBJECT_COUNT, SyncObject, r);
         }
         // Run the sub-test. (Give the upload a bit of time to start.)
+        // NOTE: This sleep should be fine because:
+        // - There is currently no API that allows asynchronous coordination for waiting for an upload to begin.
+        // - A delay longer than the specified one will not affect the outcome of the test.
+        sleep(1);
         RLMRunChildAndWait();
     } else {
         RLMRealm *r = [self openRealmForURL:url user:user];
